@@ -4,8 +4,18 @@ from datetime import datetime
 
 from googleapiclient.discovery import build
 
+from environs import Env
+
+env = Env()  # Создаем экземпляр класса Env
+env.read_env()  # Методом read_env() читаем файл .env и загружаем из него переменные в окружение
+
+YT_API_KEY = env('YT_API_KEY')  # Получаем и сохраняем значение переменной окружения в переменную YT_API_KEY
+
+
+
 SEARCH_RESULTS_FILE = "search_results.json"
 YT_API_KEY = os.getenv('YT_API_KEY')
+
 RESULTS_COUNT = 10
 OPTIONS = {
     'n': 'ввести новый запрос',
@@ -31,7 +41,7 @@ def get_search_results(query: str) -> list[dict]:
         part='id,snippet',
         maxResults=RESULTS_COUNT
     ).execute()
-
+    print()
     videos = []
     for search_result in search_response.get('items', []):
         video_id = search_result['id']['videoId']
